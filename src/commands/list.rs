@@ -14,7 +14,7 @@
 /// assert_eq!(result, 15);
 /// ```
 use clap::Args;
-use crate::model::Todo;
+use crate::db::list;
 
 #[derive(Args)]
 #[command(about = "List unfinished task items.")]
@@ -25,15 +25,7 @@ pub struct ListArgs {
 
 impl ListArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let db_path = ".storage";
-        let db = sled::open(db_path)?;
-
-        let mut result = String::from("-- TODAY ------\n");
-        for row in db.scan_prefix("todo:") {
-            let (_, value) = row?;
-            let todo: Todo = serde_json::from_slice(&value)?;
-            result += &format!("[ ] {}\n", todo.title);
-        }
+        let result = list()?;
         Ok(result)
     }
 }

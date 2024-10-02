@@ -28,7 +28,7 @@ pub fn list() -> sled::Result<String> {
     for row in db.scan_prefix("todo:") {
         let (_, value) = row?;
         let todo: Todo = serde_json::from_slice(&value).unwrap();
-        result += &format!("[ ] {}\n", todo.title);
+        result += &format!("[ ] {} ({})\n", todo.title, todo.id.chars().take(4).collect::<String>());
     }
     Ok(result)
 }
