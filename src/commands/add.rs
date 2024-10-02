@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{ops::Deref, str::FromStr};
 
 use crate::model::{Priority, Todo};
 use clap::Args;
@@ -21,10 +21,11 @@ pub struct AddArgs {
     pub due_date: Option<String>,
     #[arg(
         short = 't',
-        long,
+        long, num_args = 1.., value_name = "TAG",
+        value_delimiter = ',',
         help = "A tag for task. Can be applied more than once."
     )]
-    pub tag: Option<String>,
+    pub tags: Vec<String>,
     #[arg(
         short = 'r',
         long,
@@ -41,10 +42,9 @@ impl AddArgs {
             due_date: Some("today".to_string()),
             finished: false,
             priority: Priority::from_str(self.priority.as_deref().unwrap_or("medium")).unwrap(),
-            tags: vec![],
+            tags: self.tags.clone(),
             repeats: Some("no".to_string()),
         };
-
         insert(todo)?;
 
         Ok(format!("{}", "Added todo."))
