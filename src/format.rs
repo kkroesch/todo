@@ -31,7 +31,7 @@ pub fn format(todo: Todo) -> String {
     // Zusammensetzen der formatierten Zeile
     let line = format!(
         "{} {} {} {}\n",
-        status, priority_marker, id_display, title_display
+        status, id_display, priority_marker, title_display
     );
 
     line

@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::model::{Priority, Todo};
 use clap::Args;
 use uuid::Uuid;
@@ -10,7 +12,25 @@ pub struct AddArgs {
     #[arg(index = 1, help = "Title for the task.")]
     pub title: String,
     #[arg(short = 'p', long, help = "Priority. One of 'low', 'medium', 'high'.")]
-    pub priority: Option<Priority>,
+    pub priority: Option<String>,
+    #[arg(
+        short = 'd',
+        long,
+        help = "Timespan to remember. For example: '2d' or 'next friday'."
+    )]
+    pub due_date: Option<String>,
+    #[arg(
+        short = 't',
+        long,
+        help = "A tag for task. Can be applied more than once."
+    )]
+    pub tag: Option<String>,
+    #[arg(
+        short = 'r',
+        long,
+        help = "Timespan to repeat. For example: '1w' or 'monday'."
+    )]
+    pub repeats: Option<String>,
 }
 
 impl AddArgs {
@@ -20,8 +40,9 @@ impl AddArgs {
             title: self.title.to_string(),
             due_date: Some("today".to_string()),
             finished: false,
-            priority: Priority::Medium,
+            priority: Priority::from_str(self.priority.as_deref().unwrap_or("medium")).unwrap(),
             tags: vec![],
+            repeats: Some("no".to_string()),
         };
 
         insert(todo)?;
