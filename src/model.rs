@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
-enum Priority {
+pub enum Priority {
     Low,
     Medium,
     High,
@@ -21,11 +21,11 @@ impl std::str::FromStr for Priority {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-struct Todo {
-    id: String,
-    title: String,
-    due_date: Option<String>,
-    finished: bool,
-    priority: Priority,
-    tags: Vec<String>,
+pub struct Todo {
+    pub id: String,
+    pub title: String,
+    pub due_date: Option<String>,
+    pub finished: bool,
+    pub priority: Priority,
+    pub tags: Vec<String>,
 }

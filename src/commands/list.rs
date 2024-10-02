@@ -1,21 +1,20 @@
-/// Führt eine Berechnung durch und gibt das Ergebnis zurück.
+/// List task items from database with various filter functions.
 ///
-/// # Argumente
+/// # Arguments
 ///
-/// * `x` - Ein 32-Bit Integer-Wert.
-/// * `y` - Ein 32-Bit Integer-Wert.
 ///
-/// # Rückgabewert
+/// # Result
 ///
-/// Gibt die Summe von `x` und `y` zurück.
+/// Formatted list with task items.
 ///
-/// # Beispiel
+/// # Example
 ///
 /// ```
 /// let result = add(5, 10);
 /// assert_eq!(result, 15);
 /// ```
 use clap::Args;
+use crate::model::Todo;
 
 #[derive(Args)]
 #[command(about = "List unfinished task items.")]
@@ -26,8 +25,15 @@ pub struct ListArgs {
 
 impl ListArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let result = format!("ListCommand wurde aufgerufen.");
-        // Implement me!
+        let db_path = ".storage";
+        let db = sled::open(db_path)?;
+
+        let mut result = String::from("-- TODAY ------\n");
+        for row in db.scan_prefix("todo:") {
+            let (_, value) = row?;
+            let todo: Todo = serde_json::from_slice(&value)?;
+            result += &format!("[ ] {}\n", todo.title);
+        }
         Ok(result)
     }
 }

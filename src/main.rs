@@ -12,6 +12,7 @@ use clap::{Parser, Subcommand};
 
 mod commands;
 mod model;
+mod db;
 
 #[derive(Parser)]
 #[command(
