@@ -26,7 +26,7 @@ pub struct ListArgs {
 
 impl ListArgs {
     pub fn execute(&self) -> Result<Vec<Todo>, Box<dyn std::error::Error>> {
-        let result = list()?;
+        let result = list("todo:")?;
         Ok(result)
     }
 }

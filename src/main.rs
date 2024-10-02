@@ -55,7 +55,10 @@ fn main() {
         }
         Commands::Finish(args) => {
             let result = args.execute();
-            println!("{}", result.unwrap());
+            for todo in result.unwrap() {
+                let line = format::format(todo);
+                execute!(io::stdout(), Print(line));
+            }
         }
     }
 }

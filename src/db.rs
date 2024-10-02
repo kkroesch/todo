@@ -20,11 +20,11 @@ pub fn insert(item: Todo) -> sled::Result<()> {
     Ok(())
 }
 
-pub fn list() -> sled::Result<Vec<Todo>> {
+pub fn list(prefix: &str) -> sled::Result<Vec<Todo>> {
     let db = open_db()?;
 
     let mut result = Vec::new();
-    for row in db.scan_prefix("todo:") {
+    for row in db.scan_prefix(prefix) {
         let (_, value) = row?;
         let todo: Todo = serde_json::from_slice(&value).unwrap();
         result.push(todo);
