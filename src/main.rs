@@ -9,11 +9,15 @@
 //! - `finish`: Mark a task as finished.
 
 use clap::{Parser, Subcommand};
+use std::io::{self, Write};
+use crossterm::execute;
+use crossterm::style::{Print, SetForegroundColor, SetBackgroundColor, ResetColor, Color, Attribute};
+
 
 mod commands;
-mod model;
 mod db;
 mod format;
+mod model;
 
 #[derive(Parser)]
 #[command(
@@ -44,7 +48,10 @@ fn main() {
         }
         Commands::List(args) => {
             let result = args.execute();
-            println!("{}", result.unwrap());
+            for todo in result.unwrap() {
+                let line = format::format(todo);
+                execute!(io::stdout(), Print(line));
+            }
         }
         Commands::Finish(args) => {
             let result = args.execute();

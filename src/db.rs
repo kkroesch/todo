@@ -9,9 +9,8 @@ fn open_db() -> sled::Result<Db> {
 
 pub fn insert(item: Todo) -> sled::Result<()> {
     let key = format!("todo:{}", item.id);
-    let value = serde_json::to_vec(&item).map_err(|e| {
-        std::io::Error::new(std::io::ErrorKind::Other, e)
-    })?;
+    let value =
+        serde_json::to_vec(&item).map_err(|e| std::io::Error::new(std::io::ErrorKind::Other, e))?;
 
     let db = open_db()?;
 
@@ -21,14 +20,14 @@ pub fn insert(item: Todo) -> sled::Result<()> {
     Ok(())
 }
 
-pub fn list() -> sled::Result<String> {
+pub fn list() -> sled::Result<Vec<Todo>> {
     let db = open_db()?;
 
-    let mut result = String::from("-- TODAY ------\n");
+    let mut result = Vec::new();
     for row in db.scan_prefix("todo:") {
         let (_, value) = row?;
         let todo: Todo = serde_json::from_slice(&value).unwrap();
-        result += &format!("[ ] {} ({})\n", todo.title, todo.id.chars().take(4).collect::<String>());
+        result.push(todo);
     }
     Ok(result)
 }
