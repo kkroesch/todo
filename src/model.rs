@@ -28,4 +28,9 @@ pub struct Todo {
     pub finished: bool,
     pub priority: Priority,
     pub tags: Vec<String>,
+    /*
+        pub created_at: String,
+        pub due_date: String,
+        pub repeats: String,
+    */
 }
