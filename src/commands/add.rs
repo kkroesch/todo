@@ -1,33 +1,16 @@
-/// Führt eine Berechnung durch und gibt das Ergebnis zurück.
-///
-/// # Argumente
-///
-/// * `x` - Ein 32-Bit Integer-Wert.
-/// * `y` - Ein 32-Bit Integer-Wert.
-///
-/// # Rückgabewert
-///
-/// Gibt die Summe von `x` und `y` zurück.
-///
-/// # Beispiel
-///
-/// ```
-/// let result = add(5, 10);
-/// assert_eq!(result, 15);
-/// ```
+use crate::model::{Priority, Todo};
 use clap::Args;
-use crate::model::{Todo, Priority};
 use uuid::Uuid;
 
 use crate::db::insert;
 
 #[derive(Args)]
-#[command(about = "Add a task item.")]
+#[command(alias = "a", about = "Add a task item.")]
 pub struct AddArgs {
     #[arg(index = 1, help = "Title for the task.")]
     pub title: String,
-    #[arg(short='p', long, help = "Priority. One of 'low', 'medium', 'high'.")]
-    pub priority: Option<Priority>
+    #[arg(short = 'p', long, help = "Priority. One of 'low', 'medium', 'high'.")]
+    pub priority: Option<Priority>,
 }
 
 impl AddArgs {
