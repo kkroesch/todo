@@ -1,9 +1,33 @@
 use crate::model::{Priority, Todo};
-use crossterm::style::Stylize;
+use crossterm::{
+    execute,
+    style::{Color, Print, ResetColor, SetForegroundColor, Stylize},
+};
+use std::io::stdout;
 
 const LOW_PRIO: &str = "\u{25cb}";
 const MEDIUM_PRIO: &str = "\u{2710}";
 const HIGH_PRIO: &str = "!";
+
+pub fn ok(message: String) {
+    execute!(
+        stdout(),
+        SetForegroundColor(Color::Green),
+        Print(message),
+        ResetColor
+    )
+    .unwrap();
+}
+
+pub fn error(message: String) {
+    execute!(
+        stdout(),
+        SetForegroundColor(Color::Red),
+        Print(message),
+        ResetColor
+    )
+    .unwrap();
+}
 
 pub fn format(todo: Todo) -> String {
     // Formatierung der Statusanzeige [ ] oder [✔]

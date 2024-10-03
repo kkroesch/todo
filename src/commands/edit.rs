@@ -1,5 +1,15 @@
-use crate::db::{insert, list};
+use crate::db::list;
 use clap::Args;
+use std::fmt;
+
+#[derive(Debug)]
+pub struct EmptyResultError;
+impl fmt::Display for EmptyResultError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Empty result.")
+    }
+}
+impl std::error::Error for EmptyResultError {}
 
 #[derive(Args)]
 #[command(alias = "ed", about = "Mark task as finished.")]
@@ -12,6 +22,9 @@ impl EditArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
         let key = format!("todo:{}", self.id);
         let result = list(&key, true).unwrap();
+        if result.len() == 0 {
+            return Err(Box::new(EmptyResultError));
+        }
         println!("{:#?}", result[0]);
         Ok("Edit".to_string())
     }

@@ -12,6 +12,7 @@ use clap::{Parser, Subcommand};
 use crossterm::execute;
 use crossterm::style::Print;
 use std::io;
+use std::ops::Deref;
 
 mod commands;
 mod db;
@@ -45,7 +46,7 @@ fn main() {
     match &cli.command {
         Commands::Add(args) => {
             let result = args.execute();
-            println!("{}", result.unwrap());
+            format::ok(result.unwrap());
         }
         Commands::List(args) => {
             let result = args.execute();
@@ -56,12 +57,12 @@ fn main() {
         }
         Commands::Finish(args) => {
             let result = args.execute();
-            let line = result.unwrap();
-            execute!(io::stdout(), Print(line)).unwrap();
+            format::ok(result.unwrap());
         }
-        Commands::Edit(args) => {
-            args.execute().unwrap();
-        }
+        Commands::Edit(args) => match args.execute() {
+            Ok(message) => format::ok(message),
+            Err(err) => format::error(format!("{}", err)),
+        },
         Commands::Delete(args) => {
             let line = args.execute().unwrap();
             execute!(io::stdout(), Print(line)).unwrap();
