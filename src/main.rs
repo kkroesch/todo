@@ -12,7 +12,6 @@ use clap::{Parser, Subcommand};
 use crossterm::execute;
 use crossterm::style::Print;
 use std::io;
-use std::ops::Deref;
 
 mod commands;
 mod db;
