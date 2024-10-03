@@ -36,6 +36,7 @@ enum Commands {
     List(commands::list::ListArgs),
     Finish(commands::finish::FinishArgs),
     Edit(commands::edit::EditArgs),
+    Delete(commands::delete::DeleteArgs),
 }
 
 fn main() {
@@ -60,6 +61,10 @@ fn main() {
         }
         Commands::Edit(args) => {
             args.execute().unwrap();
+        }
+        Commands::Delete(args) => {
+            let line = args.execute().unwrap();
+            execute!(io::stdout(), Print(line)).unwrap();
         }
     }
 }

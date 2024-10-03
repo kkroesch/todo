@@ -1,4 +1,4 @@
-use std::{ops::Deref, str::FromStr};
+use std::str::FromStr;
 
 use crate::model::{Priority, Todo};
 use clap::Args;

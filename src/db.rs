@@ -33,3 +33,9 @@ pub fn list(prefix: &str, show_finished: bool) -> sled::Result<Vec<Todo>> {
     }
     Ok(result)
 }
+
+pub fn delete(prefix: &str) -> sled::Result<()> {
+    let db = open_db()?;
+    db.remove(&prefix)?;
+    Ok(())
+}
