@@ -7,6 +7,8 @@
 //! - `add`: Adds a new task item.
 //! - `list`: List all tasks.
 //! - `finish`: Mark a task as finished.
+//! - `edit`: Edit a tasks fields.
+//! - `delete`: Remove a task.
 
 use clap::{Parser, Subcommand};
 use crossterm::execute;
