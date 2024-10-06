@@ -45,7 +45,7 @@ impl AddArgs {
             tags: self.tags.clone(),
             repeats: Some("no".to_string()),
         };
-        insert(todo)?;
+        insert(todo, false, 0)?;
 
         Ok(format!("{}", "Added todo."))
     }

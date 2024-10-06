@@ -11,7 +11,9 @@ pub struct ListArgs {
 
 impl ListArgs {
     pub fn execute(&self) -> Result<Vec<Todo>, Box<dyn std::error::Error>> {
-        let result = list("todo:", self.all)?;
+        let done_prefix = if self.all { "" } else { "0" };
+        let prefix = format!("todo:0:{}", done_prefix);
+        let result = list(&prefix)?;
         Ok(result)
     }
 }
