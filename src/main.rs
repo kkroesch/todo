@@ -66,7 +66,7 @@ fn main() {
         },
         Commands::Delete(args) => {
             let line = args.execute().unwrap();
-            execute!(io::stdout(), Print(line)).unwrap();
+            format::ok(line);
         }
     }
 }

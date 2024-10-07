@@ -13,6 +13,7 @@ pub fn ok(message: String) {
     execute!(
         stdout(),
         SetForegroundColor(Color::Green),
+        Print("✔ "),
         Print(message),
         ResetColor
     )
@@ -23,6 +24,7 @@ pub fn error(message: String) {
     execute!(
         stdout(),
         SetForegroundColor(Color::Red),
+        Print("X "),
         Print(message),
         ResetColor
     )

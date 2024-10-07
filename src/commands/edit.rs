@@ -20,7 +20,7 @@ pub struct EditArgs {
 
 impl EditArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let key = format!("todo:{}", self.id);
+        let key = format!("todo:0:0:{}", self.id);
         let result = list(&key).unwrap();
         if result.len() == 0 {
             return Err(Box::new(EmptyResultError));
