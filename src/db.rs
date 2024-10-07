@@ -35,7 +35,6 @@ pub fn list(prefix: &str) -> sled::Result<Vec<Todo>> {
 
 pub fn delete(key: &str) -> sled::Result<()> {
     let db = open_db()?;
-    println!("Deleting {}", &key);
     db.remove(&key)?;
     Ok(())
 }
