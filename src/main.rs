@@ -51,6 +51,7 @@ fn main() {
         }
         Commands::List(args) => {
             let result = args.execute();
+            println!("== TODAY ================");
             for todo in result.unwrap() {
                 let line = format::format(todo);
                 execute!(io::stdout(), Print(line)).unwrap();
@@ -62,7 +63,7 @@ fn main() {
         }
         Commands::Edit(args) => match args.execute() {
             Ok(message) => format::ok(message),
-            Err(err) => format::error(format!("{}", err)),
+            Err(err) => format::error(format!("{err}")),
         },
         Commands::Delete(args) => {
             let line = args.execute().unwrap();

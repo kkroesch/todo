@@ -61,10 +61,7 @@ pub fn format(todo: Todo) -> String {
         .join(" ");
 
     // Zusammensetzen der formatierten Zeile
-    let line = format!(
-        "{} {} {} {} {}\n",
-        status, id_display, priority_marker, title_display, tag_line
-    );
+    let line = format!("{status} {id_display} {priority_marker} {title_display} {tag_line}\n",);
 
     line
 }
