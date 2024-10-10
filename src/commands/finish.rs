@@ -1,4 +1,4 @@
-use crate::db::{delete, insert};
+use crate::db::Database;
 use clap::Args;
 
 #[derive(Args)]
@@ -10,11 +10,13 @@ pub struct FinishArgs {
 
 impl FinishArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let key = format!("todo:0:0:{}", self.id);
+        let db = Database::new(".storage")?;
 
-        let mut old_task = delete(&key)?;
+        let prefix = format!("todo:0:0:{}", self.id);
+        let key = db.complete_key(&prefix)?;
+        let mut old_task = db.delete(&key)?;
         old_task.finished = true;
-        insert(old_task, true, 0)?;
+        db.insert(old_task, true, 0)?;
         Ok("Updated".to_string())
     }
 }

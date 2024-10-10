@@ -1,4 +1,4 @@
-use crate::db::list;
+use crate::db::Database;
 use clap::Args;
 use std::fmt;
 
@@ -20,8 +20,13 @@ pub struct EditArgs {
 
 impl EditArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let key = format!("todo:0:0:{}", self.id);
-        let result = list(&key).unwrap();
+        let db = Database::new(".storage")?;
+
+        let start_key = format!("todo:0:0:{}", self.id);
+        let end_key = format!("todo:0:2:{}", self.id);
+        let range = start_key.as_bytes()..end_key.as_bytes();
+
+        let result = db.range(range).unwrap();
         if result.len() == 0 {
             return Err(Box::new(EmptyResultError));
         }

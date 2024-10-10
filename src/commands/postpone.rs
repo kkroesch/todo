@@ -1,4 +1,4 @@
-use crate::db::list;
+use crate::db::Database;
 use clap::Args;
 
 #[derive(Args)]
@@ -13,8 +13,9 @@ pub struct PostponeArgs {
 
 impl PostponeArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
+        let db = Database::new(".storage")?;
         let key = format!("todo:0:0:{}", self.id);
-        let result = list(&key).unwrap();
+        let result = db.list(&key).unwrap();
         for mut todo in result {
             todo.due_date = Some(format!("{}", self.days));
         }

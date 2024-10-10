@@ -4,7 +4,7 @@ use crate::model::{Priority, Todo};
 use clap::Args;
 use uuid::Uuid;
 
-use crate::db::insert;
+use crate::db::Database;
 
 #[derive(Args)]
 #[command(alias = "a", about = "Add a task item.")]
@@ -45,7 +45,8 @@ impl AddArgs {
             tags: self.tags.clone(),
             repeats: Some("no".to_string()),
         };
-        insert(todo, false, 0)?;
+        let db = Database::new(".storage")?;
+        db.insert(todo, false, 0)?;
 
         Ok(format!("{}", "Added todo."))
     }
