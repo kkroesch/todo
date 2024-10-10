@@ -1,4 +1,4 @@
-use crate::db::{delete, insert, list};
+use crate::db::{delete, insert};
 use clap::Args;
 
 #[derive(Args)]
@@ -11,14 +11,10 @@ pub struct FinishArgs {
 impl FinishArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
         let key = format!("todo:0:0:{}", self.id);
-        let result = list(&key).unwrap();
-        for mut todo in result {
-            todo.finished = true;
-            // FIXME: DB layer should know about index keys, not commands.
-            let full_key = format!("todo:0:0:{}", todo.id);
-            insert(todo, true, 0)?;
-            delete(&full_key)?;
-        }
+
+        let mut old_task = delete(&key)?;
+        old_task.finished = true;
+        insert(old_task, true, 0)?;
         Ok("Updated".to_string())
     }
 }

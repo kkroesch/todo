@@ -39,6 +39,7 @@ enum Commands {
     Finish(commands::finish::FinishArgs),
     Edit(commands::edit::EditArgs),
     Delete(commands::delete::DeleteArgs),
+    Postpone(commands::postpone::PostponeArgs),
 }
 
 fn main() {
@@ -66,6 +67,10 @@ fn main() {
             Err(err) => format::error(format!("{err}")),
         },
         Commands::Delete(args) => {
+            let line = args.execute().unwrap();
+            format::ok(line);
+        }
+        Commands::Postpone(args) => {
             let line = args.execute().unwrap();
             format::ok(line);
         }
