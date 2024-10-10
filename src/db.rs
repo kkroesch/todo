@@ -72,7 +72,7 @@ impl Database {
 
 #[cfg(test)]
 mod tests {
-    use crate::{format::format, model::Priority};
+    use crate::model::Priority;
 
     use super::*;
     use sled;
@@ -82,17 +82,19 @@ mod tests {
     #[test]
     fn test_insert_task() -> sled::Result<()> {
         let temp_dir = TempDir::new().unwrap();
-        eprintln!("{:?}", temp_dir.path());
-        let db = Database::new(".testdb")?;
+        let temp_path = temp_dir.path().to_str().expect("Pfad ist ungültiges UTF-8");
+        let db = Database::new(temp_path)?;
+
         let task = Todo {
             id: Uuid::new_v4().to_string(),
             title: "Test Task I".into(),
-            due_date: Some("0".into()),
+            due_date: None,
             finished: false,
             priority: Priority::Low,
             tags: vec![],
             repeats: None,
         };
+
         let short_key = format!("todo:0:0:{}", &task.id[..4]);
         db.insert(task, false, 0)?;
 
