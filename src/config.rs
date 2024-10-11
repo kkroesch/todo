@@ -24,14 +24,14 @@ use std::path::PathBuf;
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub db_path: String,
-    pub log_level: Option<String>,
-    pub server: Option<ServerConfig>,
+    //pub log_level: Option<String>,
+    //pub server: Option<ServerConfig>,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct ServerConfig {
-    pub host: String,
-    pub port: u16,
+    //pub host: String,
+    //pub port: u16,
 }
 
 pub fn load_settings() -> Result<Config, Box<dyn std::error::Error>> {
@@ -59,9 +59,6 @@ pub fn load_settings() -> Result<Config, Box<dyn std::error::Error>> {
         std::fs::create_dir_all(&config_dir)?;
         std::fs::write(config_file, format!("db_path = \"{}\"", default_db_path))?;
     }
-
-    // Umgebungsvariablen hinzufügen (optional)
-    settings.merge(Environment::with_prefix("APP").separator("__"))?;
 
     let config = settings.try_deserialize()?;
     Ok(config)

@@ -1,4 +1,4 @@
-use crate::config::{load_settings, Config};
+use crate::config::load_settings;
 use crate::model::Todo;
 use sled::Db;
 use std::ops::Range;
@@ -58,7 +58,7 @@ impl Database {
 
     pub fn complete_key(&self, prefix: &str) -> sled::Result<String> {
         let mut iter = self.db.scan_prefix(prefix);
-        if let Some(Ok((key, value))) = iter.next() {
+        if let Some(Ok((key, _))) = iter.next() {
             let key_str =
                 String::from_utf8(key.to_vec()).unwrap_or("Key is not utf8-encoded.".to_string());
             Ok(key_str)
