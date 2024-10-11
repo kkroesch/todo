@@ -1,8 +1,15 @@
 //! # Configuration module
 //!
+//! This module defines the structure for the configurations items
+//! and handles the loading of config files as well as environment variables.
+//!
+//!
 //! ## Usage
 //!
-//!
+//! ```
+//! let config = Config::new().unwrap();
+//! let db = sled::open(config.db_path)?;
+//! ```
 //!
 //! ## Example Config File
 //!
@@ -14,11 +21,6 @@
 //! host = "127.0.0.1"
 //! port = 8080
 //! ```
-//!
-//! ## TODO
-//!
-//! Improve this according to the examples in
-//! https://github.com/mehcode/config-rs/blob/master/examples/hierarchical-env/settings.rs
 //!
 
 use config::{Config as ConfigLoader, ConfigError, File};

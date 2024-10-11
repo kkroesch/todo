@@ -2,6 +2,9 @@
 //!
 //! Manage to-do items on the command line. Supports various backends.
 //!
+//! Default backend is the [Sled Database](https://sled.rs).
+//! The backend code demonstrates efficient handling of a key-value store.
+//!
 //! ## Available Commands
 //!
 //! - `add`: Adds a new task item.
@@ -9,6 +12,13 @@
 //! - `finish`: Mark a task as finished.
 //! - `edit`: Edit a tasks fields.
 //! - `delete`: Remove a task.
+//!
+//!
+//! ## License and Copyright
+//!
+//! This code is written by Karsten Kroesch <kkroesch@me.com>
+//! and published under the terms of the MIT license.
+//!
 
 use clap::{Parser, Subcommand};
 use crossterm::execute;
