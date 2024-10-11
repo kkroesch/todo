@@ -82,8 +82,9 @@ mod tests {
 
     fn setup_database() -> Database {
         let temp_dir = TempDir::new().unwrap();
+        #[allow(unused)] // TODO: Move temp_path to settings!
         let temp_path = temp_dir.path().to_str().expect("Pfad ist ungültiges UTF-8");
-        Database::new(temp_path).unwrap()
+        Database::new().unwrap()
     }
 
     fn make_task(tite: String) -> Todo {

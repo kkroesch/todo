@@ -15,6 +15,10 @@
 //! port = 8080
 //! ```
 //!
+//! ## TODO
+//!
+//! Improve this according to the examples in
+//! https://github.com/mehcode/config-rs/blob/master/examples/hierarchical-env/settings.rs
 //!
 
 use config::{Config as ConfigLoader, Environment, File};
@@ -22,16 +26,18 @@ use serde::Deserialize;
 use std::path::PathBuf;
 
 #[derive(Debug, Deserialize)]
+#[allow(unused)]
 pub struct Config {
     pub db_path: String,
-    //pub log_level: Option<String>,
-    //pub server: Option<ServerConfig>,
+    pub log_level: Option<String>,
+    pub server: Option<ServerConfig>,
 }
 
 #[derive(Debug, Deserialize)]
+#[allow(unused)]
 pub struct ServerConfig {
-    //pub host: String,
-    //pub port: u16,
+    pub host: String,
+    pub port: u16,
 }
 
 pub fn load_settings() -> Result<Config, Box<dyn std::error::Error>> {
