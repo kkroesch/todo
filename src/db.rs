@@ -1,16 +1,17 @@
+use crate::config::{load_settings, Config};
 use crate::model::Todo;
 use sled::Db;
 use std::ops::Range;
-
-const DB_PATH: &str = ".storage";
 
 pub struct Database {
     db: Db,
 }
 
 impl Database {
-    pub fn new(path: &str) -> sled::Result<Self> {
-        let db = sled::open(path)?;
+    pub fn new() -> sled::Result<Self> {
+        let config = load_settings().unwrap();
+
+        let db = sled::open(config.db_path)?;
         Ok(Database { db })
     }
 
@@ -79,27 +80,50 @@ mod tests {
     use tempfile::TempDir;
     use uuid::Uuid;
 
-    #[test]
-    fn test_insert_task() -> sled::Result<()> {
+    fn setup_database() -> Database {
         let temp_dir = TempDir::new().unwrap();
         let temp_path = temp_dir.path().to_str().expect("Pfad ist ungültiges UTF-8");
-        let db = Database::new(temp_path)?;
+        Database::new(temp_path).unwrap()
+    }
 
-        let task = Todo {
+    fn make_task(tite: String) -> Todo {
+        Todo {
             id: Uuid::new_v4().to_string(),
-            title: "Test Task I".into(),
+            title: tite,
             due_date: None,
             finished: false,
             priority: Priority::Low,
-            tags: vec![],
+            tags: vec!["test".to_string(), "qa".to_string()],
             repeats: None,
-        };
+        }
+    }
+
+    #[test]
+    fn test_insert_task() -> sled::Result<()> {
+        let db = setup_database();
+
+        let task = make_task("Test Task I".to_string());
 
         let short_key = format!("todo:0:0:{}", &task.id[..4]);
         db.insert(task, false, 0)?;
 
+        Ok(())
+    }
+
+    #[test]
+    fn test_completion() -> sled::Result<()> {
+        let db = setup_database();
+
+        let task = make_task("Test Task I".to_string());
+        let short_key = format!("todo:0:0:{}", &task.id[..4]);
+        db.insert(task, false, 0)?;
+
         let result = db.complete_key(&short_key)?;
-        eprintln!("{result}");
+        Ok(())
+    }
+
+    #[test]
+    fn test_finish_task() -> sled::Result<()> {
         Ok(())
     }
 }

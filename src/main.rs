@@ -16,6 +16,7 @@ use crossterm::style::Print;
 use std::io;
 
 mod commands;
+mod config;
 mod db;
 mod format;
 mod model;
@@ -44,7 +45,6 @@ enum Commands {
 
 fn main() {
     let cli = Cli::parse();
-
     match &cli.command {
         Commands::Add(args) => {
             let result = args.execute();

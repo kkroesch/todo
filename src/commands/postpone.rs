@@ -13,7 +13,7 @@ pub struct PostponeArgs {
 
 impl PostponeArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let db = Database::new(".storage")?;
+        let db = Database::new()?;
         let key = format!("todo:0:0:{}", self.id);
         let result = db.list(&key).unwrap();
         for mut todo in result {

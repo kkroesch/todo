@@ -20,7 +20,7 @@ pub struct EditArgs {
 
 impl EditArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let db = Database::new(".storage")?;
+        let db = Database::new()?;
 
         let start_key = format!("todo:0:0:{}", self.id);
         let end_key = format!("todo:0:2:{}", self.id);

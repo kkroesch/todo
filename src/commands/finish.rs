@@ -10,7 +10,7 @@ pub struct FinishArgs {
 
 impl FinishArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let db = Database::new(".storage")?;
+        let db = Database::new()?;
 
         let prefix = format!("todo:0:0:{}", self.id);
         let key = db.complete_key(&prefix)?;

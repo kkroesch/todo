@@ -11,7 +11,7 @@ pub struct ListArgs {
 
 impl ListArgs {
     pub fn execute(&self) -> Result<Vec<Todo>, Box<dyn std::error::Error>> {
-        let db = Database::new(".storage")?;
+        let db = Database::new()?;
 
         let from_prefix = "todo:0:0:";
         let end_prefix = "todo:9:1:";

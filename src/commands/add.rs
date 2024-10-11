@@ -45,7 +45,7 @@ impl AddArgs {
             tags: self.tags.clone(),
             repeats: Some("no".to_string()),
         };
-        let db = Database::new(".storage")?;
+        let db = Database::new()?;
         db.insert(todo, false, 0)?;
 
         Ok(format!("{}", "Added todo."))
