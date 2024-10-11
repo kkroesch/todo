@@ -1,4 +1,4 @@
-use crate::config::load_settings;
+use crate::config::Config;
 use crate::model::Todo;
 use sled::Db;
 use std::ops::Range;
@@ -9,8 +9,7 @@ pub struct Database {
 
 impl Database {
     pub fn new() -> sled::Result<Self> {
-        let config = load_settings().unwrap();
-
+        let config = Config::new().unwrap();
         let db = sled::open(config.db_path)?;
         Ok(Database { db })
     }

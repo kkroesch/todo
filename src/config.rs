@@ -21,9 +21,16 @@
 //! https://github.com/mehcode/config-rs/blob/master/examples/hierarchical-env/settings.rs
 //!
 
-use config::{Config as ConfigLoader, Environment, File};
+use config::{Config as ConfigLoader, ConfigError, File};
 use serde::Deserialize;
 use std::path::PathBuf;
+
+#[derive(Debug, Deserialize)]
+#[allow(unused)]
+pub struct ServerConfig {
+    pub host: String,
+    pub port: u16,
+}
 
 #[derive(Debug, Deserialize)]
 #[allow(unused)]
@@ -33,39 +40,17 @@ pub struct Config {
     pub server: Option<ServerConfig>,
 }
 
-#[derive(Debug, Deserialize)]
-#[allow(unused)]
-pub struct ServerConfig {
-    pub host: String,
-    pub port: u16,
-}
+impl Config {
+    pub fn new() -> Result<Self, ConfigError> {
+        let config_dir = dirs::config_dir()
+            .unwrap_or_else(|| PathBuf::from("."))
+            .join("todo");
+        let config_file = config_dir.join("config.toml");
 
-pub fn load_settings() -> Result<Config, Box<dyn std::error::Error>> {
-    // Erstellen eines neuen Konfigurations-Loaders
-    let mut settings = ConfigLoader::default();
+        let s = ConfigLoader::builder()
+            .add_source(File::with_name(config_file.to_str().unwrap()))
+            .build()?;
 
-    // Standardwerte festlegen
-    let default_db_path = dirs::data_local_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join("todo")
-        .to_str()
-        .unwrap()
-        .to_string();
-
-    // Konfigurationsdatei hinzufügen (optional)
-    let config_dir = dirs::config_dir()
-        .unwrap_or_else(|| PathBuf::from("."))
-        .join("todo");
-    let config_file = config_dir.join("config.toml");
-
-    if config_file.exists() {
-        settings.merge(File::from(config_file))?;
-    } else {
-        // Falls die Konfigurationsdatei nicht existiert, erstellen wir sie mit den Standardwerten
-        std::fs::create_dir_all(&config_dir)?;
-        std::fs::write(config_file, format!("db_path = \"{}\"", default_db_path))?;
+        s.try_deserialize()
     }
-
-    let config = settings.try_deserialize()?;
-    Ok(config)
 }
