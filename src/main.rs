@@ -12,6 +12,7 @@
 //! - `finish`: Mark a task as finished.
 //! - `edit`: Edit a tasks fields.
 //! - `delete`: Remove a task.
+//! - `postpone`: Move a tasks due date to the future.
 //!
 //!
 //! ## License and Copyright

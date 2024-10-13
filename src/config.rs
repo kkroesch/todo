@@ -23,7 +23,7 @@
 //! ```
 //!
 
-use config::{Config as ConfigLoader, ConfigError, File};
+use config::{Config as ConfigLoader, ConfigError, Environment, File};
 use serde::Deserialize;
 use std::path::PathBuf;
 
@@ -50,7 +50,11 @@ impl Config {
         let config_file = config_dir.join("config.toml");
 
         let s = ConfigLoader::builder()
+            // Add configuration file as source
             .add_source(File::with_name(config_file.to_str().unwrap()))
+            // Add in settings from the environment (with a prefix of TODO)
+            // Example: `TODO_DEBUG=1 ./target/todo` would set the `debug` key
+            .add_source(Environment::with_prefix("todo"))
             .build()?;
 
         s.try_deserialize()
