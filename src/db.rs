@@ -66,6 +66,7 @@ impl Database {
         }
     }
 }
+
 //
 // TESTS
 //
@@ -76,54 +77,25 @@ mod tests {
 
     use super::*;
     use sled;
-    use tempfile::TempDir;
-    use uuid::Uuid;
 
     fn setup_database() -> Database {
-        let temp_dir = TempDir::new().unwrap();
-        #[allow(unused)] // TODO: Move temp_path to settings!
-        let temp_path = temp_dir.path().to_str().expect("Pfad ist ungültiges UTF-8");
         Database::new().unwrap()
-    }
-
-    fn make_task(tite: String) -> Todo {
-        Todo {
-            id: Uuid::new_v4().to_string(),
-            title: tite,
-            due_date: None,
-            finished: false,
-            priority: Priority::Low,
-            tags: vec!["test".to_string(), "qa".to_string()],
-            repeats: None,
-        }
     }
 
     #[test]
     fn test_insert_task() -> sled::Result<()> {
         let db = setup_database();
 
-        let task = make_task("Test Task I".to_string());
-
+        let task = Todo::new("Test Task I".to_string(), Priority::Low);
         let short_key = format!("todo:0:0:{}", &task.id[..4]);
         db.insert(task, false, 0)?;
 
-        Ok(())
-    }
+        let key = db.complete_key(&short_key)?;
+        assert_eq!(key.len(), 45);
 
-    #[test]
-    fn test_completion() -> sled::Result<()> {
-        let db = setup_database();
-
-        let task = make_task("Test Task I".to_string());
-        let short_key = format!("todo:0:0:{}", &task.id[..4]);
-        db.insert(task, false, 0)?;
-
-        let result = db.complete_key(&short_key)?;
-        Ok(())
-    }
-
-    #[test]
-    fn test_finish_task() -> sled::Result<()> {
+        let mut old_task = db.delete(&key)?;
+        old_task.finished = true;
+        db.insert(old_task, true, 0)?;
         Ok(())
     }
 }

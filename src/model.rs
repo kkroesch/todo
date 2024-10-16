@@ -1,4 +1,5 @@
 use serde::{Deserialize, Serialize};
+use uuid::Uuid;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub enum Priority {
@@ -29,4 +30,18 @@ pub struct Todo {
     pub priority: Priority,
     pub tags: Vec<String>,
     pub repeats: Option<String>,
+}
+
+impl Todo {
+    pub fn new(tite: String, prio: Priority) -> Todo {
+        Todo {
+            id: Uuid::new_v4().to_string(),
+            title: tite,
+            due_date: None,
+            finished: false,
+            priority: prio,
+            tags: vec![],
+            repeats: None,
+        }
+    }
 }

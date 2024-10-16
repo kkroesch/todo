@@ -2,7 +2,6 @@ use std::str::FromStr;
 
 use crate::model::{Priority, Todo};
 use clap::Args;
-use uuid::Uuid;
 
 use crate::db::Database;
 
@@ -36,15 +35,10 @@ pub struct AddArgs {
 
 impl AddArgs {
     pub fn execute(&self) -> Result<String, Box<dyn std::error::Error>> {
-        let todo = Todo {
-            id: Uuid::new_v4().to_string(),
-            title: self.title.to_string(),
-            due_date: Some("today".to_string()),
-            finished: false,
-            priority: Priority::from_str(self.priority.as_deref().unwrap_or("medium")).unwrap(),
-            tags: self.tags.clone(),
-            repeats: Some("no".to_string()),
-        };
+        let todo = Todo::new(
+            self.title.to_string(),
+            Priority::from_str(self.priority.as_deref().unwrap_or("medium")).unwrap(),
+        );
         let db = Database::new()?;
         db.insert(todo, false, 0)?;
 
